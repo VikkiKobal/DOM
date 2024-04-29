@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завдання 9</title>
+</head>
+<body>
+    <script>
+       class AuctionItems{
+        constructor(name, startDate, endDate, startPrice, endPrice) {
+        this._id = Math.floor(Math.random() * 100);
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startPrice = startPrice;
+        this.endPrice = endPrice;
+    }
+
+    get id() {
+        return this._id;
+    }
+}
+
+        class Auction{
+            constructor() {
+            this.items = [];
+    }
+
+    add(lot) {
+        if (!(lot instanceof AuctionItems))
+            throw `${lot} is not instance of AuctionItems class`;  
+        if (this.items.some(i => i.id == lot.id)) {
+            throw `An item with id ${lot.id} already exists.`; 
+        }
+        this.items.push(lot);
+    }
+
+    getById(id){
+        return this.items.find(item => item.id == id);
+    }
+
+    getByDateAndPrice(date, maxPrice) {
+        return this.items.filter(item => item.startDate == date && item.startPrice <= maxPrice);
+    }
+
+    update(id, updatedItem) {
+        let index = this.items.findIndex(item => item.id == id);
+        if (index!== -1) {
+            this.items[index] = updatedItem;
+        }
+    }
+
+    remove(id) {
+        let index = this.items.findIndex(item => item.id == id);
+        if (index!== -1) {
+            this.items.splice(index, 1);
+        }
+    }
+}
+
+let items = new Auction();
+let lot1 = new AuctionItems('item1', '11-29-24', '12-5-24', 1000, 5000)
+items.add(lot1);
+let lot2 = new AuctionItems('item2', '08-15-24', '11-5-24', 10000, 800000)
+items.add(lot2);
+console.log(items);
+let firstLot = items.getById(lot1.id);
+console.log(firstLot);
+    </script>
+</body>
+</html>
