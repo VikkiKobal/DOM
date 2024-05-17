@@ -8,14 +8,13 @@ document.querySelector('.current-date').innerText = `${day}.${month}.${year}`;
 
 const table = document.querySelector(".table");
 
-// Отримуємо дані щодо курсу валют з сайту https://bank.gov.ua/
 fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json')
     .then(response => {
         return response.json()
     })
     .then(data => {
         data.forEach(item => {
-            const row = document.createElement("tr"); // динамічно створюємо рядки таблиці для кожного елементу (валюти)
+            const row = document.createElement("tr"); 
             row.className="row"
             row.innerHTML = `<td>${item.txt}</td>
                         <td>${item.rate}</td>
