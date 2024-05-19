@@ -22,38 +22,28 @@ class Auction {
         this.items = [];
     }
 
-    add(lot) {
-        if (!(lot instanceof AuctionItems))
-            throw `${lot} is not an instance of AuctionItems class`;
-        if (this.items.some(i => i.id == lot.id)) {
-            throw `An item with id ${lot.id} already exists`;
-        }
-        this.items.push(lot);
-    }
-
-    getById(id) {
-        return this.items.find(item => item.id == id);
-    }
-
-    getByName(name) {
-        return this.items.find(item => item.name == name);
-    }
-
-    getByDateAndPrice(date, maxPrice) {
-        return this.items.filter(item => item.startDate == date && item.startPrice <= maxPrice);
-    }
-
-    update(id, updatedItem) {
-        let index = this.items.findIndex(item => item.id == id);
-        if (index !== -1) {
-            this.items[index] = updatedItem;
-        }
+    add(item) {
+        this.items.push(item);
     }
 
     remove(id) {
-        let index = this.items.findIndex(item => item.id == id);
-        if (index !== -1) {
-            this.items.splice(index, 1);
+        this.items = this.items.filter(item => item.id !== id);
+    }
+
+    update(id, updatedItem) {
+        let itemIndex = this.items.findIndex(item => item.id === id);
+        if (itemIndex !== -1) {
+            this.items[itemIndex] = updatedItem;
+        } else {
+            throw new Error("Item not found");
         }
+    }
+
+    getById(id) {
+        return this.items.find(item => item.id === id);
+    }
+    
+    getByDateAndPrice(date, maxPrice) {
+        return this.items.filter(item => item.startDate == date && item.startPrice <= maxPrice);
     }
 }

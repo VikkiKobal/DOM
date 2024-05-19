@@ -3,9 +3,9 @@ class AuctionWithDom extends Auction {
         super();
     }
 
-    auctionTableToHTML() {
+    auctionTableToHTML(items = this.items) {
         let rows = "";
-        for (let item of this.items) {
+        for (let item of items) {
             rows += this.itemToHTML(item);
         }
         return `
@@ -21,7 +21,6 @@ class AuctionWithDom extends Auction {
                 </tr>
                 ${rows}
             </table>
-            <button type="button" onclick="ShowAddItem()">Add item</button>
         `;
     }
 
@@ -77,8 +76,21 @@ class AuctionWithDom extends Auction {
         `;
     }
 
+    searchFormToHTML() {
+        return `
+            <div id="search">
+                <form name="searchForm" method="post" action="#">
+                    <h2>Search Items</h2>
+                    <input name="date" type="date" placeholder="date">
+                    <input name="maxPrice" placeholder="max price">
+                    <button type="button" onclick="SearchItems()">Search</button>
+                </form>
+            </div>
+        `;
+    }
+
     toHTML() {
-        return this.auctionTableToHTML() + this.addFormToHTML() + this.editFormToHTML();
+        return this.searchFormToHTML() + this.auctionTableToHTML() + this.addFormToHTML() + this.editFormToHTML() + `<button type="button" onclick="ShowAddItem()">Add item</button>`;
     }
 
     mount(parent) {
@@ -87,8 +99,12 @@ class AuctionWithDom extends Auction {
         this.addEventListeners();
     }
 
-    render() {
-        this._parent.innerHTML = this.toHTML();
+    render(items) {
+        if (items) {
+            this._parent.querySelector('table').outerHTML = this.auctionTableToHTML(items);
+        } else {
+            this._parent.innerHTML = this.toHTML();
+        }
     }
 
     addEventListeners() {
@@ -118,6 +134,11 @@ class AuctionWithDom extends Auction {
                 console.log(error);
                 alert(error);
             }
+        });
+
+        document.addEventListener("searchItems", event => {
+            const items = super.getByDateAndPrice(event.detail.date, event.detail.maxPrice);
+            this.render(items);
         });
     }
 }
@@ -160,9 +181,9 @@ function StartEditItem(id) {
       console.log(error);
       alert(error);
     }
-  }
+}
 
-  function EditItem() {
+function EditItem() {
     const editForm = document.forms.editForm;
     const id = parseInt(editForm.elements.id.value);
     const name = editForm.elements.name.value;
@@ -170,14 +191,14 @@ function StartEditItem(id) {
     const endDate = editForm.elements.endDate.value;
     const startPrice = editForm.elements.startPrice.value;
     const endPrice = editForm.elements.endPrice.value;
-  
+
     let item = auction.getById(id);
     item.name = name;
     item.startDate = startDate;
     item.endDate = endDate;
     item.startPrice = startPrice;
     item.endPrice = endPrice;
-  
+
     let editItemEvent = new CustomEvent("editItem", {
       detail: {
         id,
@@ -189,7 +210,19 @@ function StartEditItem(id) {
       }
     });
     document.dispatchEvent(editItemEvent);
-  }
+}
+
+function SearchItems() {
+    const date = document.getElementsByName("date")[0].value;
+    const maxPrice = document.getElementsByName("maxPrice")[0].value;
+    let searchItemsEvent = new CustomEvent("searchItems", {
+        detail: {
+            date,
+            maxPrice: parseFloat(maxPrice)
+        }
+    });
+    document.dispatchEvent(searchItemsEvent);
+}
 
 function ShowAddItem() {
     document.getElementById("add").style.display = "block";

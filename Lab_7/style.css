@@ -1,6 +1,7 @@
 table {
     border-collapse: collapse;
     width: 100%;
+    margin-bottom: 20px;
 }
 
 th,
@@ -30,4 +31,27 @@ button {
 #add,
 #edit {
     display: none;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
+
+#search {
+    margin-bottom: 20px;
+}
+
+form input {
+    margin: 5px 0;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form h3 {
+    margin-top: 0;
+}
+
+label {
+    font-weight: bold;
 }
